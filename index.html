@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hypnotic clock - Animated ticking clock - @nyan-matt</title>
+  <style>
+   body {
+    margin-top: 16%;
+    background-color: #C9C9C9;
+    filter: grayscale(1);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+  .wrapper {
+    display: grid;
+    grid-template-columns: auto;
+    margin: 0 48px;
+  }
+  
+  @media (min-width: 1279px) {
+    .wrapper {
+      margin: 0 256px;
+    }
+  }
+
+  @media (maX-width: 1023px) {
+    .wrapper {
+      margin: 0 128px;
+    }
+  }
+  @media (max-width: 639px) {
+    .wrapper {
+      margin: 0 24px;
+    }
+  }
+
+  .description {
+    grid-column: span 6;
+    color: #787878;
+    margin-top:48px; 
+  }
+
+  img {
+      width: 100%;
+      max-width: 100%;
+      height:auto;
+      filter: grayscale(1);
+      box-shadow: inset 0px 1px 4px 0px rgba(0,0,0,0.22);
+      border: 1px solid #dfdfdf;
+      outline: 1px solid rgba(0,0,0,0.20);
+  }
+  h1 {font-size: 18px;}
+  p {line-height:24px}
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <img id="hour1" srcset="" alt="hour digit tens place">
+    <img id="hour2" srcset="" alt="hour digit ones place">
+    <img id="minute1" srcset="" alt="minute digit tens place">
+    <img id="minute2" srcset="" alt="minute digit ones place">
+    <img id="second1" srcset="" alt="second digit tens place">
+    <img id="second2" srcset="" alt="second digit ones place">
+    <div class="description">
+      <h1>Clock study</h1>
+      <p>
+        Quick experiment of clock using static and animated images as digits.
+      </p>
+      <p>
+        I saw something similar written in actionscript probably 20 years ago, and it always stuck in my brain. (It's actually kinda hypnotic)
+        I also wanted to play with Chat-GPT a bit, so after generating the images, I worked through some prompts on the javascript side to get it running. 
+        Probably would have been faster to write it from scratch, but it was fun.   
+      </p>
+    </div>
+  </div>
+  
+  <script>
+    let previousTime = '';
+
+    function displayCurrentTime() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const currentTime = hours + minutes + seconds;
+
+      if (currentTime !== previousTime) {
+        for (let i = 0; i < currentTime.length; i++) {
+          const elementId = ['hour1', 'hour2', 'minute1', 'minute2', 'second1', 'second2'][i];
+          const element = document.getElementById(elementId);
+          
+          const staticSrc = `${currentTime[i]}.gif`; // static image src
+          const animatedSrc = `${currentTime[i]}.webp`; // animated image src
+
+          if (previousTime === '' || currentTime[i] !== previousTime[i]) {
+            // Set the animated image src if the digit changed
+            element.srcset = animatedSrc;
+          } else {
+            // Set the static image src if the digit didn't change
+            element.srcset = staticSrc;
+          }
+        }
+        previousTime = currentTime;
+      }
+    }
+
+    // Initialize static images
+    function initializeClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const currentTime = hours + minutes + seconds;
+
+      for (let i = 0; i < currentTime.length; i++) {
+        const elementId = ['hour1', 'hour2', 'minute1', 'minute2', 'second1', 'second2'][i];
+        const element = document.getElementById(elementId);
+        const staticSrc = `${currentTime[i]}.gif`; // static image src
+        element.srcset = staticSrc;
+      }
+    }
+
+    // Initialize the clock with static images
+    initializeClock();
+
+    // Call the function every second to display the current time
+    setInterval(displayCurrentTime, 1000);
+  </script>
+</body>
+</html>
